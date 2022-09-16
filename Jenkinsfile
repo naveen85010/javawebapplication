@@ -8,7 +8,7 @@ pipeline{
             }
         }
 	
-        stage('Quality Gate Status Check'){
+       /* stage('Quality Gate Status Check'){
             steps{
                 script{
 			withSonarQubeEnv(credentialsId: 'sonar-token') { 
@@ -24,7 +24,7 @@ pipeline{
                           }
                 }
             }  
-        }
+        } */
 	
 	
         stage("Maven Build"){
