@@ -11,7 +11,7 @@ pipeline{
        stage('Quality Gate Status Check'){
             steps{
                 script{
-			withSonarQubeEnv(credentialsId: 'sonar-token') { 
+			withSonarQubeEnv(credentialsId: 'sonar token') { 
                         // Get Home Path of Maven 
                         def mvnHome = tool name: 'maven-3', type: 'maven'
 			sh "${mvnHome}/bin/mvn clean sonar:sonar"
