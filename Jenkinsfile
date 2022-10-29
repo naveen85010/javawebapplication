@@ -13,6 +13,25 @@ pipeline {
     git credentialsId: 'github', url: 'https://github.com/naveen85010/javawebapplication.git'
        }
    }
+       
+        stage("quality check condition"){
+    steps{
+        script{
+            withSonarQubeEnv(credentialsId: 'sonar-token') {
+           def mvnHome = tool name: 'maven-3', type: 'maven'
+           sh "$(mvnHome)/bin/mvn clean sonar:sonar"
+
+           timeout(unit: 'SECONDS', time: 20){
+            def qg = waitForQualityGate()
+
+             if (qg.status != 'OK'){
+                error " pipeline got aborted due to quality gate failes $(qg.status)"
+             }
+           }
+          }
+        }
+    }
+   }
 
    stage("maven build"){
     steps{
