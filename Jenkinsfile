@@ -30,7 +30,7 @@ pipeline {
         sshagent(['tomcat8']) {
     // some block
     
-    Sh """
+    sh """
       mv target/* target/javawebapplication.war
       scp -o StrictHostKeyChecking=no targer/javawebapplication.war linux-slave@172.31.38.104:/opt/tomcat8/webapps/
       ssh linux-slave@172.31.36.56 /opt/tomcat8/bin/.shutdown.sh
