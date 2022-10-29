@@ -32,9 +32,9 @@ pipeline {
     
     Sh """
       mv target/* target/javawebapplication.war
-      scp -o StrictHostKeyChecking=no targer/javawebapplication.war linux-slave@172.31.36.56:/opt/tomcat8/webapps/
-      linux-slave@172.31.36.56 /opt/tomcat8/bin/.shutdown.sh
-      linux-slave@172.31.36.56 /opt/tomcat8/bin/.startup.sh
+      scp -o StrictHostKeyChecking=no targer/javawebapplication.war linux-slave@172.31.38.104:/opt/tomcat8/webapps/
+      ssh linux-slave@172.31.36.56 /opt/tomcat8/bin/.shutdown.sh
+      ssh linux-slave@172.31.36.56 /opt/tomcat8/bin/.startup.sh
     """
 
       }
