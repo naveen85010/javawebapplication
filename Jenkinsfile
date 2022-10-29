@@ -1,5 +1,9 @@
 pipeline{
-    agent node1
+    agent {
+        node {
+            label 'node1'
+        }
+    }
     
     stages{
         stage("Git Checkout"){
