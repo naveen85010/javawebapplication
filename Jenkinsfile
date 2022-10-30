@@ -21,22 +21,41 @@ pipeline {
            def mvnHome = tool name: 'maven-3', type: 'maven'
                 sh "${mvnHome}/bin/mvn clean sonar:sonar"
 
-           timeout(unit: 'SECONDS', time: 20){
+           //timeout(unit: 'SECONDS', time: 20){
             //def qg = waitForQualityGate()
 
              //if (qg.status != 'OK'){
                //  error " pipeline got aborted due to quality gate failes ${qg.status}"
              //}
                
-               qualitygate = waitForQualityGate()
-                    if (qualitygate.status != "OK") {
-                        currentBuild.result = "UNSTABLE"
-                    }
-           }
+               //qualitygate = waitForQualityGate()
+                 //   if (qualitygate.status != "OK") {
+                   //     currentBuild.result = "UNSTABLE"
+                    //}
+           //}
           }
         }
     }
    }
+       
+       
+       stage ("SonarQube analysis") {
+   steps {
+      withSonarQubeEnv('SonarQube') {
+         sh "../../../sonar-scanner-2.9.0.670/bin/sonar-scanner"   
+      }
+
+      def qualitygate = waitForQualityGate()
+      if (qualitygate.status != "OK") {
+         error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
+      }
+   }
+}
+       
+       
+       
+       
+       
 
    stage("maven build"){
     steps{
