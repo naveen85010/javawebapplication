@@ -22,11 +22,16 @@ pipeline {
                 sh "${mvnHome}/bin/mvn clean sonar:sonar"
 
            timeout(unit: 'SECONDS', time: 20){
-            def qg = waitForQualityGate()
+            //def qg = waitForQualityGate()
 
-             if (qg.status != 'OK'){
-                 error " pipeline got aborted due to quality gate failes ${qg.status}"
-             }
+             //if (qg.status != 'OK'){
+               //  error " pipeline got aborted due to quality gate failes ${qg.status}"
+             //}
+               
+               qualitygate = waitForQualityGate()
+                    if (qualitygate.status != "OK") {
+                        currentBuild.result = "UNSTABLE"
+                    }
            }
           }
         }
