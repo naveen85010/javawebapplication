@@ -14,12 +14,12 @@ pipeline {
        }
    }
        
-        stage("quality check condition"){
-    steps{
-        script{
-            withSonarQubeEnv(credentialsId: 'sonar-token') {
-           def mvnHome = tool name: 'maven-3', type: 'maven'
-                sh "${mvnHome}/bin/mvn clean sonar:sonar"
+       // stage("quality check condition"){
+   // steps{
+       // script{
+            //withSonarQubeEnv(credentialsId: 'sonar-token') {
+          // def mvnHome = tool name: 'maven-3', type: 'maven'
+               // sh "${mvnHome}/bin/mvn clean sonar:sonar"
 
            //timeout(unit: 'SECONDS', time: 20){
             //def qg = waitForQualityGate()
@@ -54,6 +54,42 @@ pipeline {
         
     }
    }
+       
+       
+       
+       
+     stage("Deploying war filr to nexus"){
+
+        steps{
+            script{
+                 def mavenPom = readMavenPom file: 'pom.xml'
+                 def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "javawebapplication-snapshot" : "javawebapplication-release"
+
+                nexusArtifactUploader artifacts: 
+                [ 
+                    [ artifactId: 'javawebapplication', 
+                      classifier: '', 
+                      file: "target/javawebapplication-${mavenPom.version}.war", 
+                      type: 'war'
+                      
+                      ]
+                      
+                    ], 
+                       credentialsId: 'nexus3', 
+                       groupId: 'in.javahome', 
+                       nexusUrl: '52.66.61.114:8081', 
+                       nexusVersion: 'nexus3', 
+                       protocol: 'http', 
+                       repository: "${nexusRepoName}", 
+                       version: "${mavenPom.version}"
+            }
+        }
+     }
+
+
+       
+       
+       
        
        
        stage("deploy to tomcat"){
