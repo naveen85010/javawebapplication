@@ -58,35 +58,30 @@ pipeline {
        
        
        
-     stage("Deploying war filr to nexus"){
-
-        steps{
-            script{
-                 def mavenPom = readMavenPom file: 'pom.xml'
-                 def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "javawebapplication-snapshot" : "javawebapplication-release"
-
-                nexusArtifactUploader artifacts: 
-                [ 
-                    [ artifactId: 'javawebapplication', 
-                      classifier: '', 
-                      file: "target/javawebapplication-${mavenPom.version}.war", 
-                      type: 'war'
-                      
-                      ]
-                      
-                    ], 
-                       credentialsId: 'nexus3', 
-                       groupId: 'in.javahome', 
-                       nexusUrl: '13.234.122.238:8081', 
-                       nexusVersion: 'nexus3', 
-                       protocol: 'http', 
-                       repository: "${nexusRepoName}", 
-                       version: "${mavenPom.version}"
-            }
-        }
-     }
-
-
+    stage("Upload War To Nexus"){
+	    steps{
+		script{
+		    def mavenPom = readMavenPom file: 'pom.xml'
+		    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "javawebapplication-snapshot" : "javawebapplication-release"
+		    nexusArtifactUploader artifacts: [
+			[
+			    artifactId: 'javawebapplication', 
+		            classifier: '', 
+			    file: "target/javawebapplication-${mavenPom.version}.war", 
+			    type: 'war'
+			]
+			], 
+			    credentialsId: 'nexus3', 
+			    groupId: 'in.javahome', 
+			    nexusUrl: '13.234.122.238:8081', 
+			    nexusVersion: 'nexus3', 
+			    protocol: 'http', 
+			    repository: nexusRepoName, 
+			    version: "${mavenPom.version}"    
+                       }
+		}
+	}
+	
        
        
        
